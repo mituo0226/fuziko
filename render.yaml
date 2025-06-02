@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: fuziko
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    region: oregon
