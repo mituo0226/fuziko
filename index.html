@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>霊能者 藤子の未来鑑定</title>
+</head>
+<body bgcolor="#2c003e" text="#ffffff">
+  <center>
+    <h2><font color="#ff4040">🔮 霊能者 藤子の未来予知 🔮</font></h2>
+    <p><font color="#ffffff">名前と生年月日を入力すると、AIがあなたの運命を霊視します。</font></p>
+    <form id="fortuneForm">
+      <p><input type="text" id="name" placeholder="お名前" required></p>
+      <p>
+        <select id="year"></select>年
+        <select id="month"></select>月
+        <select id="day"></select>日
+      </p>
+      <p><button type="submit">未来を視る</button></p>
+    </form>
+    <div id="result" style="width:80%; margin-top:20px;"></div>
+  </center>
+
+<script>
+  const yearSel = document.getElementById("year");
+  const monthSel = document.getElementById("month");
+  const daySel = document.getElementById("day");
+
+  for (let y = 1950; y <= 2010; y++) {
+    yearSel.innerHTML += `<option value="${y}">${y}</option>`;
+  }
+  for (let m = 1; m <= 12; m++) {
+    monthSel.innerHTML += `<option value="${m}">${m}</option>`;
+  }
+  for (let d = 1; d <= 31; d++) {
+    daySel.innerHTML += `<option value="${d}">${d}</option>`;
+  }
+
+  document.getElementById("fortuneForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const name = document.getElementById("name").value;
+    const birthday = yearSel.value + "-" + monthSel.value.padStart(2, '0') + "-" + daySel.value.padStart(2, '0');
+
+    const res = await fetch("/fortune", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, birthday })
+    });
+
+    const data = await res.json();
+    document.getElementById("result").innerHTML = `<font color="#ff4040"><b>${name}殿の鑑定結果</b></font><br><br><font color="#ffffff">${data.result.replace(/\n/g, "<br>")}</font>`;
+  });
+</script>
+</body>
+</html>
